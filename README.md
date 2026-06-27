@@ -58,6 +58,36 @@ Call `grid.setup()` once in your project's global stylesheet. It generates `:roo
 | `row-gap`    | Gap between rows                                   |
 | `gutter`     | Outer margin on both sides                         |
 
+**Using custom functions and CSS custom properties**
+
+Config values are passed through as-is, so any Sass expression that resolves to a valid CSS value can be used — including project-defined functions and CSS custom properties.
+
+```scss
+// With a rem() utility function
+@include grid.setup((
+  md: (
+    media: "--md",
+    columns: 16,
+    rows: 1,
+    column-gap: rem(16),
+    row-gap: 0,
+    gutter: rem(32),
+  ),
+));
+
+// With CSS custom properties
+@include grid.setup((
+  md: (
+    media: "--md",
+    columns: 16,
+    rows: 1,
+    column-gap: var(--space-4),
+    row-gap: 0,
+    gutter: var(--space-layout),
+  ),
+));
+```
+
 > **Map key = utility class prefix.**
 > The top-level key (`md`, `sm`, ...) becomes the breakpoint prefix of every generated utility class.
 > `media` controls only the `@media` query — the two can be named independently.
