@@ -76,7 +76,12 @@
 
       .#{$bp}\:u-grid-global {
 
-        padding-inline: var(--lgs-grid-gutter);
+        inline-size: calc(
+          100svw - var(--lgs-grid-gutter) * 2
+        );
+
+        margin-inline: auto;
+        justify-content: center;
 
       }
 

@@ -62,16 +62,16 @@ describe('container(global)', () => {
     expect(container('global')['display']).toBe('grid');
   });
 
-  it('padding-inline uses gutter token', () => {
-    expect(container('global')['padding-inline']).toBe('var(--lgs-grid-gutter)');
+  it('margin-inline: auto', () => {
+    expect(container('global')['margin-inline']).toBe('auto');
   });
 
-  it('no margin-inline (full-width, no centering needed)', () => {
-    expect(container('global')['margin-inline']).toBeUndefined();
+  it('inline-size references 100svw', () => {
+    expect(container('global')['inline-size']).toContain('100svw');
   });
 
-  it('no inline-size (full-width via padding-inline)', () => {
-    expect(container('global')['inline-size']).toBeUndefined();
+  it('justify-content: center', () => {
+    expect(container('global')['justify-content']).toBe('center');
   });
 
   it('--_grid-column-width is defined', () => {
