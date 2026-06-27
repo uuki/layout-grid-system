@@ -32,6 +32,42 @@ Layout Grid System is designed around the following principles.
 
 ---
 
+# Relationship to Traditional Grid Layouts
+
+The basic usage of Layout Grid System — defining a grid container and placing children within it — is structurally the same as traditional approaches.
+
+```scss
+// This pattern is the same as any CSS Grid-based framework
+.page {
+    @include grid.container(global);
+}
+
+.hero {
+    @include grid.place((column: (1, 10)));
+}
+
+.sidebar {
+    @include grid.place((column: (11, 16)));
+}
+```
+
+In most frameworks, layout responsibility flows from parent to child. The container defines the grid; components occupy a portion of it. This is also true in Layout Grid System.
+
+The single differentiator is `context()`.
+
+When a component is placed inside a grid cell and its own children need to align to the original page grid, traditional approaches require either restructuring the DOM or threading `subgrid` through every intermediate ancestor. Layout Grid System provides `context(global)` as a self-contained alternative.
+
+```scss
+.hero {
+    @include grid.place((column: (1, 10)));
+    @include grid.context(global);  // children align to page grid from here
+}
+```
+
+This is the only capability that distinguishes Layout Grid System from standard CSS Grid usage.
+
+---
+
 # Coordinate System
 
 Traditional CSS Grid layouts are scoped to their nearest grid container.
@@ -160,12 +196,12 @@ The grid uses the viewport as its reference.
 
 Column widths are calculated from
 
-* viewport width
+* viewport width (`100svw`)
 * gutter
 * column count
 * column gap
 
-rather than from the parent element.
+rather than from the parent element. This means every `global` container — at any nesting depth — produces the same column width, and is therefore independent of document structure.
 
 ```text
 Viewport
@@ -173,7 +209,9 @@ Viewport
 □□□□□□□□□□□□□□□□□□□□□□□□
 ```
 
-Use this mode for page layouts.
+Use this mode for page layouts and as the target of `context(global)`.
+
+**Constraint:** Because column width is based on `100svw`, placing a global container inside an element with a constrained width (e.g. `max-width`, `padding`) will cause the grid to overflow its parent. This mode is intended as an alternative to subgrid drilling — use it on elements that are not additionally width-constrained.
 
 ---
 
@@ -520,5 +558,7 @@ Layout Grid System is built around five concepts.
 3. Placement positions elements.
 4. Tokens centralize layout values.
 5. Components remain independent while sharing the same layout model.
+
+The fundamental usage pattern — container defines the grid, children occupy it — is the same as any CSS Grid-based approach. The single capability that distinguishes Layout Grid System is `context(global)`: a nested component can opt into the page-level coordinate system without requiring every ancestor to participate via `subgrid`.
 
 These concepts together enable scalable, reusable, and predictable layout architecture for modern applications.
