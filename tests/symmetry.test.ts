@@ -115,6 +115,42 @@ describe('symmetry — column end', () => {
 });
 
 // ---------------------------------------------------------------------------
+// row range  place((row: (s, e))) ↔ md:u-grid-row-s:e
+// ---------------------------------------------------------------------------
+
+describe('symmetry — row range', () => {
+  it('(1, 3) ↔ md:u-grid-row-1:3', () => {
+    expect(mixinPlace('row: (1, 3)')).toEqual(util('.md\\:u-grid-row-1\\:3'));
+  });
+
+  it('(2, 6) ↔ md:u-grid-row-2:6', () => {
+    expect(mixinPlace('row: (2, 6)')).toEqual(util('.md\\:u-grid-row-2\\:6'));
+  });
+
+  it('(1, 4) ↔ sm:u-grid-row-1:4', () => {
+    expect(mixinPlace('row: (1, 4)')).toEqual(util('.sm\\:u-grid-row-1\\:4'));
+  });
+});
+
+// ---------------------------------------------------------------------------
+// row end  place((row: (end: n))) ↔ md:u-grid-row-end-n
+// ---------------------------------------------------------------------------
+
+describe('symmetry — row end', () => {
+  it('end: 2 ↔ md:u-grid-row-end-2', () => {
+    expect(mixinPlace('row: (end: 2)')).toEqual(util('.md\\:u-grid-row-end-2'));
+  });
+
+  it('end: 6 ↔ md:u-grid-row-end-6', () => {
+    expect(mixinPlace('row: (end: 6)')).toEqual(util('.md\\:u-grid-row-end-6'));
+  });
+
+  it('end: 4 ↔ sm:u-grid-row-end-4', () => {
+    expect(mixinPlace('row: (end: 4)')).toEqual(util('.sm\\:u-grid-row-end-4'));
+  });
+});
+
+// ---------------------------------------------------------------------------
 // container  container(mode) ↔ bp:u-grid[-global][-fluid]
 // ---------------------------------------------------------------------------
 

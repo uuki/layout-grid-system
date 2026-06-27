@@ -340,27 +340,54 @@
       }
 
       // --------------------------------
-      // Row
-      // --------------------------------
-      @for $i from 1 through $rows {
-
-        .#{$bp}\:u-grid-row-start-#{$i} {
-          grid-row-start: #{$i};
-        }
-
-        .#{$bp}\:u-grid-row-span-#{$i} {
-          grid-row: span #{$i};
-        }
-
-      }
-
-      // --------------------------------
       // Order
       // --------------------------------
       @for $i from 1 through 20 {
 
         .#{$bp}\:u-grid-order-#{$i} {
           order: #{$i};
+        }
+
+      }
+    }
+  }
+}
+
+/**
+ * setup-rows($config)
+ *
+ * Generates row utility classes. Call in addition to setup() only when needed.
+ * Accepts the same $config shape — only `media` and `rows` keys are used.
+ *
+ * @include grid.setup($config);
+ * @include grid.setup-rows($config);
+ */
+@mixin setup-rows($config) {
+  @each $bp, $settings in $config {
+    $media: map.get($settings, media);
+    $rows: map.get($settings, rows);
+
+    @media (#{$media}) {
+      @for $start from 1 through $rows {
+
+        @for $end from $start through $rows {
+
+          .#{$bp}\:u-grid-row-#{$start}\:#{$end} {
+            grid-row: _grid-column-range($start, $end);
+          }
+
+        }
+
+        .#{$bp}\:u-grid-row-start-#{$start} {
+          grid-row-start: #{$start};
+        }
+
+        .#{$bp}\:u-grid-row-span-#{$start} {
+          grid-row: span #{$start};
+        }
+
+        .#{$bp}\:u-grid-row-end-#{$start} {
+          grid-row-end: _grid-end($start);
         }
 
       }

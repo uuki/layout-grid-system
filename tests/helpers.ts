@@ -37,11 +37,11 @@ export function utilityRoot(): Root {
   if (!_utilityRoot) {
     _utilityRoot = compileScss(`
       @use 'grid' as grid;
-      @include grid.setup((
+      $config: (
         md: (
           media: "--md",
           columns: 16,
-          rows: 1,
+          rows: 6,
           column-gap: 16px,
           row-gap: 0,
           gutter: 16px,
@@ -49,12 +49,14 @@ export function utilityRoot(): Root {
         sm: (
           media: "--sm",
           columns: 4,
-          rows: 1,
+          rows: 4,
           column-gap: 8px,
           row-gap: 0,
           gutter: 8px,
         ),
-      ));
+      );
+      @include grid.setup($config);
+      @include grid.setup-rows($config);
     `);
   }
   return _utilityRoot;
