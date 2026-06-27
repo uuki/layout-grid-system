@@ -58,6 +58,17 @@ Call `grid.setup()` once in your project's global stylesheet. It generates `:roo
 | `row-gap`    | Gap between rows                                   |
 | `gutter`     | Outer margin on both sides                         |
 
+> **Map key = utility class prefix.**
+> The top-level key (`md`, `sm`, ...) becomes the breakpoint prefix of every generated utility class.
+> `media` controls only the `@media` query — the two can be named independently.
+>
+> ```scss
+> @include grid.setup((
+>   md: ( media: "--md", ... )  // generates .md\:u-grid, .md\:u-grid-col-*, ...
+>   sm: ( media: "--sm", ... )  // generates .sm\:u-grid, .sm\:u-grid-col-*, ...
+> ));
+> ```
+
 ### 2. Create a layout
 
 ```scss
