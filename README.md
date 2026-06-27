@@ -5,58 +5,64 @@
 
 > A Sass-based layout system for building reusable, token-driven global layouts with CSS Grid.
 
-Layout Grid System provides a consistent way to build page layouts and reusable components around a single layout coordinate system.
+---
 
-Unlike traditional CSS Grid approaches that rely on ancestor grids or extensive `subgrid` usage, Layout Grid System allows any component to recreate the same global layout grid explicitly.
+## 📦 Installation
+
+```bash
+pnpm add uuki/layout-grid-system
+```
+
+**Requirements**
+
+- Sass 1.45+
+- PostCSS with [`postcss-custom-media`](https://github.com/csstools/postcss-plugins/tree/main/plugins/postcss-custom-media) for `@custom-media` support
 
 ---
 
-## Why?
+## 🚀 Getting Started
 
-Large projects often encounter problems such as:
+### 1. Define your grid
 
-* Deeply nested components cannot align to the page grid.
-* Components become tightly coupled to ancestor layouts.
-* Layout values are duplicated across projects.
-* Grid utilities only work inside specific containers.
-* `subgrid` requires every intermediate ancestor to participate.
-
-Layout Grid System solves these problems by introducing a reusable **layout context**.
-
----
-
-## Features
-
-* CSS Grid based
-* Token-driven layout system
-* Global and local grid modes
-* Global Fluid mode
-* Explicit layout contexts
-* Utility classes and Sass Mixins
-* Responsive by design
-* Backward compatible placement syntax
-* Supports named grid lines
-* Supports named grid areas
-
----
-
-## Philosophy
-
-Layout Grid System separates layout into three independent responsibilities.
-
-| Responsibility                      | API           |
-| ----------------------------------- | ------------- |
-| Create a grid container             | `container()` |
-| Position an element                 | `place()`     |
-| Recreate a layout coordinate system | `context()`   |
-
-This separation keeps components independent while allowing them to share the same layout language.
-
----
-
-# Example
+Call `grid.setup()` once in your project's global stylesheet. It generates `:root` tokens and utility classes for each breakpoint from a single config.
 
 ```scss
+@use 'layout-grid-system/grid' as grid;
+
+@include grid.setup((
+  md: (
+    media: "--md",
+    columns: 16,
+    rows: 1,
+    column-gap: 16px,
+    row-gap: 0,
+    gutter: 16px,
+  ),
+  sm: (
+    media: "--sm",
+    columns: 4,
+    rows: 1,
+    column-gap: 8px,
+    row-gap: 0,
+    gutter: 8px,
+  ),
+));
+```
+
+| Key          | Description                                        |
+| ------------ | -------------------------------------------------- |
+| `media`      | CSS Custom Media name (requires `postcss-custom-media`) |
+| `columns`    | Number of grid columns                             |
+| `rows`       | Number of grid rows                                |
+| `column-gap` | Gap between columns                                |
+| `row-gap`    | Gap between rows                                   |
+| `gutter`     | Outer margin on both sides                         |
+
+### 2. Create a layout
+
+```scss
+@use 'layout-grid-system/grid' as grid;
+
 .page {
     @include grid.container(global);
 }
@@ -74,42 +80,73 @@ This separation keeps components independent while allowing them to share the sa
 }
 ```
 
----
+### 3. Recreate the grid inside a component
 
-## Recreating the Global Grid
-
-A component may recreate the global layout for its descendants.
+Any component can recreate the global grid for its children using `context()`.
 
 ```scss
 .hero {
-
-    @include grid.place((
-        column: (1, 10),
-    ));
-
+    @include grid.place((column: (1, 10)));
     @include grid.context(global);
-
 }
-```
 
-Children can now position themselves using the page grid again.
-
-```scss
 .hero__title {
-
     @include grid.place((
-        column: (
-            start: 5,
-            span: 4,
-        ),
+        column: (start: 2, span: 6),
     ));
-
 }
 ```
 
 ---
 
-# Coordinate System
+## ❓ Why?
+
+Layout Grid System provides a consistent way to build page layouts and reusable components around a single layout coordinate system.
+
+Unlike traditional CSS Grid approaches that rely on ancestor grids or extensive `subgrid` usage, Layout Grid System allows any component to recreate the same global layout grid explicitly.
+
+Large projects often encounter problems such as:
+
+* Deeply nested components cannot align to the page grid.
+* Components become tightly coupled to ancestor layouts.
+* Layout values are duplicated across projects.
+* Grid utilities only work inside specific containers.
+* `subgrid` requires every intermediate ancestor to participate.
+
+Layout Grid System solves these problems by introducing a reusable **layout context**.
+
+---
+
+## ✨ Features
+
+* CSS Grid based
+* Token-driven layout system
+* Global and local grid modes
+* Global Fluid mode
+* Explicit layout contexts
+* Utility classes and Sass Mixins
+* Responsive by design
+* Backward compatible placement syntax
+* Supports named grid lines
+* Supports named grid areas
+
+---
+
+## 💡 Philosophy
+
+Layout Grid System separates layout into three independent responsibilities.
+
+| Responsibility                      | API           |
+| ----------------------------------- | ------------- |
+| Create a grid container             | `container()` |
+| Position an element                 | `place()`     |
+| Recreate a layout coordinate system | `context()`   |
+
+This separation keeps components independent while allowing them to share the same layout language.
+
+---
+
+## 📐 Coordinate System
 
 Every placement belongs to a layout context.
 
@@ -124,13 +161,13 @@ Global Layout Grid
 
 The documentation uses a **16-column grid** for demonstration purposes.
 
-The actual number of columns is completely configurable through layout tokens.
+The actual number of columns is completely configurable through `grid.setup()`.
 
 ---
 
-# Layout Modes
+## 🗺️ Layout Modes
 
-## Local
+### Local
 
 Uses the current container width.
 
@@ -140,9 +177,7 @@ Uses the current container width.
 
 Recommended for component layouts.
 
----
-
-## Global
+### Global
 
 Uses the viewport width.
 
@@ -152,9 +187,7 @@ Uses the viewport width.
 
 Recommended for page layouts.
 
----
-
-## Global Fluid
+### Global Fluid
 
 Uses the global column width while respecting the available width of the parent container.
 
@@ -166,7 +199,7 @@ Recommended for reusable components.
 
 ---
 
-# Placement
+## 📍 Placement
 
 The shorthand syntax remains supported.
 
@@ -181,8 +214,6 @@ Equivalent to
 ```css
 grid-column: 1 / 5;
 ```
-
----
 
 More expressive syntax is also available.
 
@@ -212,47 +243,47 @@ More expressive syntax is also available.
 
 ---
 
-# Layout Tokens
+## 🔧 Layout Tokens
 
-The entire system is configured through CSS Custom Properties.
+Tokens are generated per breakpoint by `grid.setup()` and can be overridden in your own stylesheet.
 
-```css
-:root {
-
-    --lgs-grid-columns: 16;
-
-    --lgs-grid-rows: 1;
-
-    --lgs-grid-column-gap: 2rem;
-
-    --lgs-grid-row-gap: 3rem;
-
-    --lgs-grid-gutter: 2rem;
-
+```scss
+@media (--md) {
+    :root {
+        --lgs-grid-columns: 12;
+        --lgs-grid-column-gap: 24px;
+        --lgs-grid-gutter: 40px;
+    }
 }
 ```
 
-Changing these values updates every generated grid.
+| Token                    | Description              |
+| ------------------------ | ------------------------ |
+| `--lgs-grid-columns`     | Number of columns        |
+| `--lgs-grid-rows`        | Number of rows           |
+| `--lgs-grid-column-gap`  | Gap between columns      |
+| `--lgs-grid-row-gap`     | Gap between rows         |
+| `--lgs-grid-gutter`      | Outer margin             |
 
 ---
 
-# Utility Classes
+## 🛠️ Utility Classes
 
 Every Sass API has an equivalent utility class.
 
 | Sass                | Utility               |
 | ------------------- | --------------------- |
-| `container()`       | `u-grid`              |
-| `container(global)` | `u-grid-global`       |
-| `container(fluid)`  | `u-grid-global-fluid` |
-| `place(column)`     | `u-grid-col-*`        |
-| `place(row)`        | `u-grid-row-*`        |
+| `container()`       | `md:u-grid`           |
+| `container(global)` | `md:u-grid-global`    |
+| `container(fluid)`  | `md:u-grid-global-fluid` |
+| `place(column)`     | `md:u-grid-col-*`     |
+| `place(row)`        | `md:u-grid-row-*`     |
 
 Choose whichever style best fits your project.
 
 ---
 
-# Documentation
+## 📚 Documentation
 
 | Document            | Description                    |
 | ------------------- | ------------------------------ |
@@ -265,7 +296,7 @@ Choose whichever style best fits your project.
 
 ---
 
-# Design Principles
+## 🎯 Design Principles
 
 * One source of truth for layout values.
 * Components should not depend on ancestor grids.
@@ -276,7 +307,7 @@ Choose whichever style best fits your project.
 
 ---
 
-# Browser Support
+## 🌐 Browser Support
 
 Layout Grid System requires modern browsers supporting:
 
@@ -289,6 +320,6 @@ Optional features may additionally rely on:
 
 ---
 
-# License
+## 📄 License
 
 MIT

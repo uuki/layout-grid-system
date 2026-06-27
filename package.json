@@ -3,6 +3,17 @@
   "version": "0.1.0",
   "description": "A Sass-based layout system for building reusable, token-driven global layouts with CSS Grid.",
   "packageManager": "pnpm@9.15.0",
+  "files": [
+    "grid.scss"
+  ],
+  "exports": {
+    ".": {
+      "sass": "./grid.scss"
+    }
+  },
+  "peerDependencies": {
+    "sass": ">=1.45.0"
+  },
   "scripts": {
     "build": "sass grid.scss dist/grid.css",
     "lint": "stylelint grid.scss",

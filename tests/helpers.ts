@@ -35,7 +35,27 @@ let _utilityRoot: Root | null = null;
 
 export function utilityRoot(): Root {
   if (!_utilityRoot) {
-    _utilityRoot = compileScss(`@use 'grid';`);
+    _utilityRoot = compileScss(`
+      @use 'grid' as grid;
+      @include grid.setup((
+        md: (
+          media: "--md",
+          columns: 16,
+          rows: 1,
+          column-gap: 16px,
+          row-gap: 0,
+          gutter: 16px,
+        ),
+        sm: (
+          media: "--sm",
+          columns: 4,
+          rows: 1,
+          column-gap: 8px,
+          row-gap: 0,
+          gutter: 8px,
+        ),
+      ));
+    `);
   }
   return _utilityRoot;
 }
