@@ -202,33 +202,57 @@ The actual number of columns is completely configurable through `grid.setup()`.
 
 ### Local
 
-Uses the current container width.
-
 ```scss
 @include grid.container();
 ```
 
-Recommended for component layouts.
+Behaves as standard CSS Grid. Column width is determined by the container's own width using `1fr` units. No special calculation is applied — this is equivalent to writing `grid-template-columns: repeat(N, minmax(0, 1fr))` directly.
+
+Recommended for self-contained component layouts where alignment to the page grid is not required.
+
+---
 
 ### Global
-
-Uses the viewport width.
 
 ```scss
 @include grid.container(global);
 ```
 
-Recommended for page layouts.
+Column width is always calculated from the **viewport width** (`100svw`), regardless of where the element appears in the DOM. This means every global container — at any nesting depth — produces the same column width.
+
+```
+column width = (100svw − gutter × 2 − column-gap × (N − 1)) / N
+```
+
+Because the reference is always the viewport root, this mode is **independent of document structure**. Any component can recreate the same page grid using `grid.context(global)` without requiring its ancestors to participate.
+
+```scss
+// A deeply nested component can still align to the page grid
+.card {
+    @include grid.place((column: (3, 10)));
+    @include grid.context(global);  // children share the same global grid
+}
+```
+
+> **Note:** Because column width is based on `100svw`, placing a global container inside an element that already has a constrained width (e.g. `max-width`, `padding`) will cause the grid to overflow. This mode is intended as an alternative to subgrid drilling — use it on elements that are not additionally width-constrained.
+
+---
 
 ### Global Fluid
-
-Uses the global column width while respecting the available width of the parent container.
 
 ```scss
 @include grid.container(fluid);
 ```
 
-Recommended for reusable components.
+Preserves the same column count and column proportions as `global`, but caps the reference width to the **parent element's width** instead of the viewport.
+
+| | Global | Global Fluid |
+|---|---|---|
+| Column count | `--lgs-grid-columns` | same |
+| Column proportions | viewport-based | same |
+| Reference width | `100svw` | `min(100svw, 100%)` |
+
+Use this when a component must match the column structure of the page grid while fitting within a constrained parent. Suitable for reusable components that appear in both full-width and contained contexts.
 
 ---
 
