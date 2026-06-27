@@ -351,6 +351,26 @@ Tokens are generated per breakpoint by `grid.setup()` and can be overridden in y
 | `--lgs-grid-column-gap`  | Gap between columns      |
 | `--lgs-grid-row-gap`     | Gap between rows         |
 | `--lgs-grid-gutter`      | Outer margin             |
+| `--lgs-reference-width`  | Viewport reference width for column calculation (default: `100svw`) |
+
+### Scrollbar compensation
+
+In browsers with classic scrollbars (Windows / Linux), `100svw` includes the scrollbar width while `position: fixed` or `width: 100%` containers do not. This causes a sub-pixel gutter mismatch in `global` and `fluid` modes.
+
+Set `--lgs-reference-width` to compensate:
+
+```ts
+// Run once at page load (e.g. in a layout script)
+const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+if (scrollbarWidth > 0) {
+  document.documentElement.style.setProperty(
+    '--lgs-reference-width',
+    `calc(100svw - ${scrollbarWidth}px)`
+  );
+}
+```
+
+When no scrollbar is present the value stays `100svw`, so this snippet is safe to run unconditionally on all platforms.
 
 ---
 

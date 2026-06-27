@@ -5,7 +5,7 @@
 @mixin tokens {
   --_grid-column-width: calc(
     (
-      100svw
+      var(--lgs-reference-width, 100svw)
       - var(--lgs-grid-gutter) * 2
       - (var(--lgs-grid-columns) - 1) * var(--lgs-grid-column-gap)
     ) / var(--lgs-grid-columns)
@@ -45,7 +45,7 @@
     @if $mode == global {
 
       inline-size: calc(
-        100svw - var(--lgs-grid-gutter) * 2
+        var(--lgs-reference-width, 100svw) - var(--lgs-grid-gutter) * 2
       );
 
       margin-inline: auto;
@@ -55,7 +55,7 @@
 
       inline-size: min(
         calc(
-          100svw - var(--lgs-grid-gutter) * 2
+          var(--lgs-reference-width, 100svw) - var(--lgs-grid-gutter) * 2
         ),
         100%
       );
