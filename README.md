@@ -357,20 +357,15 @@ Tokens are generated per breakpoint by `grid.setup()` and can be overridden in y
 
 In browsers with classic scrollbars (Windows / Linux), `100svw` includes the scrollbar width while `position: fixed` or `width: 100%` containers do not. This causes a sub-pixel gutter mismatch in `global` and `fluid` modes.
 
-Set `--lgs-reference-width` to compensate:
+Add the following to any stylesheet in your project to compensate:
 
-```ts
-// Run once at page load (e.g. in a layout script)
-const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-if (scrollbarWidth > 0) {
-  document.documentElement.style.setProperty(
-    '--lgs-reference-width',
-    `calc(100svw - ${scrollbarWidth}px)`
-  );
+```scss
+:root {
+  --lgs-reference-width: calc(100svw - var(--scrollbar-width));
 }
 ```
 
-When no scrollbar is present the value stays `100svw`, so this snippet is safe to run unconditionally on all platforms.
+`--scrollbar-width` is expected to be provided by your project's own JavaScript implementation.
 
 ---
 
