@@ -370,6 +370,50 @@ Choose whichever style best fits your project.
 
 ---
 
+## 📤 Ejecting
+
+If you want to remove the dependency on `node_modules` and manage the source files directly, use the eject command.
+
+```bash
+npx lgs-eject [output-path]
+```
+
+Output path is optional. When omitted, files are ejected to the current working directory.
+
+```bash
+# Eject to current directory → ./layout-grid-system/
+npx lgs-eject
+
+# Eject to a specified path → src/styles/lib/layout-grid-system/
+npx lgs-eject src/styles/lib
+```
+
+This creates a `layout-grid-system/` directory at the specified path and copies all source files into it.
+
+```
+src/styles/lib/
+└── layout-grid-system/
+    ├── grid.scss
+    └── src/
+        ├── _functions.scss
+        ├── _mixins.scss
+        └── _setup.scss
+```
+
+After ejecting, update your `@use` path:
+
+```scss
+// Before
+@use 'layout-grid-system/grid' as grid;
+
+// After
+@use '@/styles/lib/layout-grid-system/grid' as grid;
+```
+
+The internal relative imports between files are preserved, so no further changes are needed.
+
+---
+
 ## 📚 Documentation
 
 | Document            | Description                    |

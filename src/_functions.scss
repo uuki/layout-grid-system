@@ -1,0 +1,27 @@
+@use "sass:meta";
+@use "sass:list";
+
+@function range($range) {
+  @return #{list.nth($range, 1)} / #{list.nth($range, 2) + 1};
+}
+
+@function grid-column-range($start, $end) {
+  @return #{$start} / #{$end + 1};
+}
+
+@function grid-end($value) {
+  @if meta.type-of($value) == number {
+    @return $value + 1;
+  }
+  @return $value;
+}
+
+@function normalize-axis($value) {
+  @if meta.type-of($value) == list {
+    @return (
+      start: list.nth($value, 1),
+      end: list.nth($value, 2),
+    );
+  }
+  @return $value;
+}

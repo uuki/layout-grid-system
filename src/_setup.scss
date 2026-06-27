@@ -1,0 +1,180 @@
+// required: @custom-media with postcss
+@use "sass:map";
+@use "functions" as fn;
+
+@mixin setup($config) {
+  @each $bp, $settings in $config {
+    $media: map.get($settings, media);
+    $columns: map.get($settings, columns);
+    $rows: map.get($settings, rows);
+    $column-gap: map.get($settings, column-gap);
+    $row-gap: map.get($settings, row-gap);
+    $gutter: map.get($settings, gutter);
+
+    @media (#{$media}) {
+      :root {
+        --lgs-grid-columns: #{$columns};
+        --lgs-grid-rows: #{$rows};
+        --lgs-grid-column-gap: #{$column-gap};
+        --lgs-grid-row-gap: #{$row-gap};
+        --lgs-grid-gutter: #{$gutter};
+      }
+
+      // --------------------------------
+      // Grid (Local)
+      // --------------------------------
+      .#{$bp}\:u-grid {
+
+        display: grid;
+        column-gap: var(--lgs-grid-column-gap);
+        row-gap: var(--lgs-grid-row-gap);
+
+        grid-template-columns:
+          repeat(
+            var(--lgs-grid-columns),
+            minmax(0, 1fr)
+          );
+
+        grid-template-rows:
+          repeat(
+            var(--lgs-grid-rows),
+            auto
+          );
+      }
+
+      // --------------------------------
+      // Grid (Global)
+      // --------------------------------
+      .#{$bp}\:u-grid-global,
+      .#{$bp}\:u-grid-global-fluid {
+
+        --_grid-column-width: calc(
+          (
+            100svw
+            - var(--lgs-grid-gutter) * 2
+            - (var(--lgs-grid-columns) - 1) * var(--lgs-grid-column-gap)
+          ) / var(--lgs-grid-columns)
+        );
+
+        display: grid;
+
+        margin-inline: auto;
+
+        column-gap: var(--lgs-grid-column-gap);
+        row-gap: var(--lgs-grid-row-gap);
+
+        grid-template-columns:
+          repeat(
+            var(--lgs-grid-columns),
+            minmax(0, var(--_grid-column-width))
+          );
+
+        grid-template-rows:
+          repeat(
+            var(--lgs-grid-rows),
+            auto
+          );
+      }
+
+      .#{$bp}\:u-grid-global {
+
+        inline-size: calc(
+          100svw - var(--lgs-grid-gutter) * 2
+        );
+
+      }
+
+      .#{$bp}\:u-grid-global-fluid {
+
+        inline-size: min(
+          calc(100svw - var(--lgs-grid-gutter) * 2),
+          100%
+        );
+
+      }
+
+      // --------------------------------
+      // Subgrid
+      // --------------------------------
+      .#{$bp}\:u-subgrid {
+        display: grid;
+        grid-template-columns: subgrid;
+      }
+
+      .#{$bp}\:u-subgrid-rows {
+        display: grid;
+        grid-template-rows: subgrid;
+      }
+
+      // --------------------------------
+      // Column
+      // --------------------------------
+      @for $start from 1 through $columns {
+
+        @for $end from $start through $columns {
+
+          .#{$bp}\:u-grid-col-#{$start}\:#{$end} {
+            grid-column: fn.grid-column-range($start, $end);
+          }
+
+        }
+
+        .#{$bp}\:u-grid-col-span-#{$start} {
+          grid-column: span #{$start};
+        }
+
+        .#{$bp}\:u-grid-col-start-#{$start} {
+          grid-column-start: #{$start};
+        }
+
+        .#{$bp}\:u-grid-col-end-#{$start} {
+          grid-column-end: fn.grid-end($start);
+        }
+      }
+
+      // --------------------------------
+      // Order
+      // --------------------------------
+      @for $i from 1 through 20 {
+
+        .#{$bp}\:u-grid-order-#{$i} {
+          order: #{$i};
+        }
+
+      }
+    }
+  }
+}
+
+@mixin setup-rows($config) {
+  @each $bp, $settings in $config {
+    $media: map.get($settings, media);
+    $rows: map.get($settings, rows);
+
+    @media (#{$media}) {
+      @for $start from 1 through $rows {
+
+        @for $end from $start through $rows {
+
+          .#{$bp}\:u-grid-row-#{$start}\:#{$end} {
+            grid-row: fn.grid-column-range($start, $end);
+          }
+
+        }
+
+        .#{$bp}\:u-grid-row-start-#{$start} {
+          grid-row-start: #{$start};
+        }
+
+        .#{$bp}\:u-grid-row-span-#{$start} {
+          grid-row: span #{$start};
+        }
+
+        .#{$bp}\:u-grid-row-end-#{$start} {
+          grid-row-end: fn.grid-end($start);
+        }
+
+      }
+    }
+  }
+}

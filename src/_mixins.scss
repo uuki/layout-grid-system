@@ -1,0 +1,150 @@
+@use "sass:meta";
+@use "sass:map";
+@use "functions" as fn;
+
+@mixin tokens {
+  --_grid-column-width: calc(
+    (
+      100svw
+      - var(--lgs-grid-gutter) * 2
+      - (var(--lgs-grid-columns) - 1) * var(--lgs-grid-column-gap)
+    ) / var(--lgs-grid-columns)
+  );
+}
+
+@mixin make-context($mode: local) {
+  display: grid;
+
+  grid-template-rows:
+    repeat(
+      var(--lgs-grid-rows),
+      auto
+    );
+
+  column-gap: var(--lgs-grid-column-gap);
+  row-gap: var(--lgs-grid-row-gap);
+
+  @if $mode == local {
+
+    grid-template-columns:
+      repeat(
+        var(--lgs-grid-columns),
+        minmax(0, 1fr)
+      );
+
+  } @else {
+
+    @include tokens;
+
+    grid-template-columns:
+      repeat(
+        var(--lgs-grid-columns),
+        minmax(0, var(--_grid-column-width))
+      );
+
+    margin-inline: auto;
+
+    @if $mode == global {
+
+      inline-size: calc(
+        100svw - var(--lgs-grid-gutter) * 2
+      );
+
+    } @else if $mode == fluid {
+
+      inline-size: min(
+        calc(
+          100svw - var(--lgs-grid-gutter) * 2
+        ),
+        100%
+      );
+
+    }
+  }
+}
+
+@mixin place-axis($property, $value) {
+  $axis: fn.normalize-axis($value);
+
+  $start: map.get($axis, start);
+  $end: map.get($axis, end);
+  $start-line: map.get($axis, start-line);
+  $end-line: map.get($axis, end-line);
+  $span: map.get($axis, span);
+
+  @if $start-line {
+    $start: $start-line;
+  }
+
+  @if $end-line {
+    $end: $end-line;
+  }
+
+  @if $start != null and $span != null {
+
+    #{$property}: #{$start} / span #{$span};
+
+  } @else if $start != null and $end != null {
+
+    @if meta.type-of($end) == number {
+      $end: $end + 1;
+    }
+
+    #{$property}: #{$start} / #{$end};
+
+  } @else if $span != null {
+
+    #{$property}: span #{$span};
+
+  } @else if $start != null {
+
+    #{$property}-start: #{$start};
+
+  } @else if $end != null {
+
+    @if meta.type-of($end) == number {
+      $end: $end + 1;
+    }
+
+    #{$property}-end: #{$end};
+  }
+}
+
+@mixin make-place($layout) {
+  $has-area: map.has-key($layout, area);
+  $has-column: map.has-key($layout, column);
+  $has-row: map.has-key($layout, row);
+
+  @if $has-area and ($has-column or $has-row) {
+    @error "`area` cannot be used together with `column` or `row`.";
+  }
+
+  @if $has-area {
+
+    grid-area: map.get($layout, area);
+
+  } @else {
+
+    @if $has-column {
+      @include place-axis(grid-column, map.get($layout, column));
+    }
+
+    @if $has-row {
+      @include place-axis(grid-row, map.get($layout, row));
+    }
+
+  }
+}
+
+// Public API
+@mixin container($mode: local) {
+  @include make-context($mode);
+}
+
+@mixin context($mode: local) {
+  @include make-context($mode);
+}
+
+@mixin place($layout) {
+  @include make-place($layout);
+}

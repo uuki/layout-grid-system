@@ -4,8 +4,13 @@
   "description": "A Sass-based layout system for building reusable, token-driven global layouts with CSS Grid.",
   "packageManager": "pnpm@9.15.0",
   "files": [
-    "grid.scss"
+    "grid.scss",
+    "src/",
+    "bin/"
   ],
+  "bin": {
+    "lgs-eject": "./bin/eject.js"
+  },
   "exports": {
     ".": {
       "sass": "./grid.scss"
@@ -19,7 +24,7 @@
   },
   "scripts": {
     "build": "sass grid.scss dist/grid.css",
-    "lint": "stylelint grid.scss",
+    "lint": "stylelint grid.scss 'src/**/*.scss'",
     "check": "pnpm lint && pnpm build",
     "test": "vitest run",
     "test:watch": "vitest",
