@@ -9,6 +9,9 @@
   "exports": {
     ".": {
       "sass": "./grid.scss"
+    },
+    "./grid": {
+      "sass": "./grid.scss"
     }
   },
   "peerDependencies": {
