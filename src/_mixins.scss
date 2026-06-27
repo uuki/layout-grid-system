@@ -42,13 +42,9 @@
         minmax(0, var(--_grid-column-width))
       );
 
-    margin-inline: auto;
-
     @if $mode == global {
 
-      inline-size: calc(
-        100svw - var(--lgs-grid-gutter) * 2
-      );
+      padding-inline: var(--lgs-grid-gutter);
 
     } @else if $mode == fluid {
 
@@ -58,6 +54,9 @@
         ),
         100%
       );
+
+      margin-inline: auto;
+      justify-content: center;
 
     }
   }

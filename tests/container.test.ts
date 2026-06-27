@@ -62,12 +62,16 @@ describe('container(global)', () => {
     expect(container('global')['display']).toBe('grid');
   });
 
-  it('margin-inline: auto', () => {
-    expect(container('global')['margin-inline']).toBe('auto');
+  it('padding-inline uses gutter token', () => {
+    expect(container('global')['padding-inline']).toBe('var(--lgs-grid-gutter)');
   });
 
-  it('inline-size references 100svw', () => {
-    expect(container('global')['inline-size']).toContain('100svw');
+  it('no margin-inline (full-width, no centering needed)', () => {
+    expect(container('global')['margin-inline']).toBeUndefined();
+  });
+
+  it('no inline-size (full-width via padding-inline)', () => {
+    expect(container('global')['inline-size']).toBeUndefined();
   });
 
   it('--_grid-column-width is defined', () => {
@@ -98,6 +102,10 @@ describe('container(fluid)', () => {
 
   it('--_grid-column-width is defined', () => {
     expect(container('fluid')['--_grid-column-width']).toBeDefined();
+  });
+
+  it('justify-content: center', () => {
+    expect(container('fluid')['justify-content']).toBe('center');
   });
 });
 
