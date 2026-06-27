@@ -57,7 +57,7 @@ jobs:
 
       - name: Update coverage badge (main only)
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-        uses: schneegans/dynamic-badges-action@v1.7.0
+        uses: schneegans/dynamic-badges-action@e9a478b16159b4d31420099ba146cdc50f134483 # v1.7.0
         env:
           ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: true
         with:
