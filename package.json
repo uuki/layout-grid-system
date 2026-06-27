@@ -1,0 +1,23 @@
+{
+  "name": "layout-grid-system",
+  "version": "0.1.0",
+  "description": "A Sass-based layout system for building reusable, token-driven global layouts with CSS Grid.",
+  "packageManager": "pnpm@9.15.0",
+  "scripts": {
+    "build": "sass grid.scss dist/grid.css",
+    "lint": "stylelint grid.scss",
+    "check": "pnpm lint && pnpm build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@vitest/coverage-v8": "^4.1.9",
+    "postcss": "^8.5.15",
+    "sass": "^1.89.2",
+    "stylelint": "^16.21.0",
+    "stylelint-config-standard-scss": "^14.0.0",
+    "vitest": "^4.1.9"
+  }
+}
